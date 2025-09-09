@@ -9,18 +9,18 @@ module maq_h(
 
 always_ff @(posedge maqh_clock or negedge maqh_reset) begin
 	if(!maqh_reset)
-		begin
+	begin
 		maqh_Lsd <= 4'b0000;
 		maqh_Msd <= 2'b00;
-		end
+	end
 	else if((maqh_enable) && (maqh_incremento))
 		begin
-        if ((maqh_Msd == 2'b10) && (maqh_Lsd == 4'b0011)) begin
+        if ((maqh_Msd >= 2'b10) && (maqh_Lsd >= 4'b0011)) begin
             maqh_Lsd <= 4'b0000;
             maqh_Msd <= 2'b00;
         end
-        else if (maqh_Lsd == 4'b1001) begin
-            maqh_Lsd <= 4'b0000;
+        else if (maqh_Lsd >= 4'b1001) begin
+            maqh_Lsd <= 0;
             maqh_Msd <= maqh_Msd + 1;
         end
         else begin
