@@ -1,4 +1,4 @@
-module maq_s2(
+module maq_s(
 	input maqs_clock,
 	input maqs_reset,
 	input maqs_enable,
@@ -10,7 +10,7 @@ module maq_s2(
 always_ff @(posedge maqs_clock or negedge maqs_reset) begin
 	if(!maqs_reset)
 	begin
-		maqs_Lsd <= 4'b0000;
+	  maqs_Lsd <= 4'b0000;
       maqs_Msd <= 3'b000;
       maqs_addminuto <= 1'b0;
 	end
@@ -23,7 +23,7 @@ always_ff @(posedge maqs_clock or negedge maqs_reset) begin
 			if(maqs_Msd >= 3'b101) 
 			begin
 				maqs_Msd <= 3'b000;
-				maqs_addminuto <= 1'b1;
+				maqs_addminuto <= 1'b0;
 			end 
 			else 
 			begin
@@ -31,11 +31,23 @@ always_ff @(posedge maqs_clock or negedge maqs_reset) begin
 				maqs_addminuto <= 1'b0;
 			end
 		end
-		else 
+		else if(maqs_Msd >= 3'b101)
 		begin
+			if(maqs_Lsd >= 4'b1000 && maqs_Lsd < 4'b1001)
+			begin
+				maqs_addminuto <= 1'b1;
+			end
+			else 
+			begin
+				maqs_addminuto <= 0;
+			end
 			maqs_Lsd <= maqs_Lsd + 1;
-			maqs_addminuto <= 0;
 		end
+		else 
+			begin
+				maqs_Lsd <= maqs_Lsd + 1;
+				maqs_addminuto <= 0;
+			end
 	end
 end
 

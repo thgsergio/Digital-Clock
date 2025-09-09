@@ -13,7 +13,7 @@ always_ff @(posedge maqh_clock or negedge maqh_reset) begin
 		maqh_Lsd <= 4'b0000;
 		maqh_Msd <= 2'b00;
 	end
-	else if((maqh_enable) && (maqh_incremento))
+	else if(maqh_enable && maqh_incremento)
 		begin
         if ((maqh_Msd >= 2'b10) && (maqh_Lsd >= 4'b0011)) begin
             maqh_Lsd <= 4'b0000;
