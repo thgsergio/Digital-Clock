@@ -25,7 +25,6 @@ logic incrementa_hora;
 logic [3:0] bcd_h_Lsd;
 logic [2:0] bcd_h_Msd;
 
-
 enable_1hz meuhabilitador(
 .enable_clock(clock),
 .enable_reset(reset),
