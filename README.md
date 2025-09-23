@@ -24,5 +24,5 @@ Implementado e testado no **Quartus II** com suporte para FPGA, exibindo **horas
 ---
 
 📖 Projeto acadêmico desenvolvido por:  
-Gabriel Lorenzo Xavier, Iago Lopes da Silva Costa, João Pedro Pereira Maranhão,  
+Gabriel Lorenzo Xavier, Iago Vitor Lopes das Chagas, João Pedro Pereira Maranhão,  
 Luis Eduardo Pereira Nunes da Costa, Thiago Sergio Lima de Oliveira. 
