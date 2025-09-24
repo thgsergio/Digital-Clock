@@ -1,69 +1,49 @@
-	module maq_m(
-		input maqm_clock,
-		input maqm_reset,
-		input maqm_enable,
-		input maqm_incremento,
-		output logic [3:0] maqm_Lsd,
-		output logic [2:0] maqm_Msd,
-		output logic maqm_incrementahora
-	);
+module maq_m(
+    input  logic maqm_clock,
+    input  logic maqm_reset,
+    input  logic maqm_enable,
+    input  logic maqm_incremento,     // pulso vindo dos segundos
+    output logic [3:0] maqm_Lsd,
+    output logic [2:0] maqm_Msd,
+    output logic maqm_incrementahora  // pulso para horas
+);
 
-	logic temp_maqm_inc_hora;
+    logic [3:0] Lsd_reg, Lsd_next;
+    logic [2:0] Msd_reg, Msd_next;
 
-	always_ff @(posedge maqm_clock or negedge maqm_reset)
-	begin
-		if(!maqm_reset)
-		begin
-			maqm_Lsd <= 4'b1000;
-			maqm_Msd <= 3'b101;
-			temp_maqm_inc_hora <= 1'b0;
-		end
-		else if(maqm_enable)
-		begin
-			if(maqm_incremento)
-			begin
-				if(maqm_Lsd >= 4'b1001) 
-				begin
-					maqm_Lsd <= 4'b0000;
+    // Estado atual
+    always_ff @(posedge maqm_clock or negedge maqm_reset) begin
+        if (!maqm_reset) begin
+            Lsd_reg <= 4'd9;
+            Msd_reg <= 3'd5;
+        end
+        else if (maqm_enable && maqm_incremento) begin
+            Lsd_reg <= Lsd_next;
+            Msd_reg <= Msd_next;
+        end
+    end
 
-					if(maqm_Msd >= 3'b101) 
-					begin
-						maqm_Msd <= 3'b000;
-						temp_maqm_inc_hora <= 1'b0;
-					end 
-					else 
-					begin
-						maqm_Msd <= maqm_Msd + 1'b1;
-						temp_maqm_inc_hora <= 1'b0;
-					end
-				end
-				else if(maqm_Msd >= 3'b101)
-				begin
-					if(maqm_Lsd >= 4'b1000 && maqm_Lsd <= 4'b1001)
-					begin
-						temp_maqm_inc_hora <= 1'b1;
-					end
-					else 
-					begin
-						temp_maqm_inc_hora <= 0;
-					end
-					maqm_Lsd <= maqm_Lsd + 1;
-				end
-				else 
-				begin
-					maqm_Lsd <= maqm_Lsd + 1;
-					temp_maqm_inc_hora <= 0;
-				end
-			end
-			end
-			else begin
-				if(temp_maqm_inc_hora) begin
-					maqm_incrementahora = temp_maqm_inc_hora & maqm_incremento;
-				end
-				else begin
-					maqm_incrementahora = 1'b0;
-				end
-		end
-	end
+    // Lógica combinacional
+    always_comb begin
+        Lsd_next = Lsd_reg;
+        Msd_next = Msd_reg;
 
-	endmodule
+        if (Msd_reg == 3'd5 && Lsd_reg == 4'd9) begin
+            Lsd_next = 4'd0;
+            Msd_next = 3'd0;
+        end
+        else if (Lsd_reg == 4'd9) begin
+            Lsd_next = 4'd0;
+            Msd_next = Msd_reg + 1'b1;
+        end
+        else begin
+            Lsd_next = Lsd_reg + 1'b1;
+        end
+    end
+
+    // Saídas
+    assign maqm_Lsd = Lsd_reg;
+    assign maqm_Msd = Msd_reg;
+    assign maqm_incrementahora = (Msd_reg == 3'd5 && Lsd_reg == 4'd9);
+
+endmodule
