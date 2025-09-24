@@ -25,6 +25,7 @@ logic incrementa_hora;
 logic [3:0] bcd_h_Lsd;
 logic [2:0] bcd_h_Msd;
 
+
 enable_1hz meuhabilitador(
 .enable_clock(clock),
 .enable_reset(reset),
@@ -71,7 +72,8 @@ maq_h maq_display_h(
 .maqh_clock(clock),
 .maqh_reset(reset),
 .maqh_enable(enable1hz),
-.maqh_incremento(incrementa_hora),
+.maqh_incremento_min(incrementa_hora),
+.maqh_incremento_seg(incrementa_minuto),
 .maqh_Lsd(bcd_h_Lsd),
 .maqh_Msd(bcd_h_Msd));
 
